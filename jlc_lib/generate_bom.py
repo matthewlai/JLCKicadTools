@@ -20,7 +20,7 @@ from jlc_lib import kicad_netlist_reader
 import csv
 import re
 
-LCSC_PART_NUMBER_MATCHER=re.compile('^C[0-9]+')
+LCSC_PART_NUMBER_MATCHER=re.compile('^C[0-9]+$')
 
 def GenerateBOM(input_filename, output_filename):
   net = kicad_netlist_reader.netlist(input_filename)
