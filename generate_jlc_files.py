@@ -27,7 +27,7 @@ from jlc_lib.generate_bom import GenerateBOM
 
 def main():
 	parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter)
-	parser.add_argument('project_dir', metavar='project directory', type=str, nargs='?', help='Directory of KiCad project', default=os.getcwd())
+	parser.add_argument('project_dir', metavar='project directory', type=os.path.abspath, nargs='?', help='Directory of KiCad project', default=os.getcwd())
 	parser.add_argument('-d', '--database', metavar='database', type=str, help='Filename of database', default=os.path.join(os.path.dirname(__file__), "cpl_rotations_db.csv"))
 	parser.add_argument('-v', '--verbose', help='increases log verbosity for each occurrence', dest='verbose_count', action="count", default=0)
 
@@ -40,7 +40,8 @@ def main():
 		logging.error("Failed to open project directory: {}".format(opts.project_dir))
 		return
 
-	project_name = os.path.basename(os.path.normpath(opts.project_dir))
+	project_name = os.path.basename(opts.project_dir)
+	logging.debug("Project name is '%s'.", project_name)
 	netlist_filename = project_name + ".xml"
 	cpl_filename = project_name + "-all-pos.csv"
 	netlist_path = None
