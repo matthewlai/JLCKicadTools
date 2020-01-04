@@ -38,7 +38,7 @@ def main():
 
 	if not os.path.isdir(opts.project_dir):
 		logging.error("Failed to open project directory: {}".format(opts.project_dir))
-		return
+		return -1
 
 	project_name = os.path.basename(opts.project_dir)
 	logging.debug("Project name is '%s'.", project_name)
@@ -59,14 +59,14 @@ def main():
 			"Failed to find netlist file: {} in {} (and sub-directories). "
 			"Run 'Tools -> Generate Bill of Materials' in Eeschema (any format). "
 			"It will generate an intermediate file we need.").format(netlist_filename, opts.project_dir))
-		return
+		return -1
 
 	if cpl_path is None:
 		logging.error((
 			"Failed to find CPL file: {} in {} (and sub-directories). "
 			"Run 'File -> Fabrication Outputs -> Footprint Position (.pos) File' in Pcbnew. "
 			"Settings: 'CSV', 'mm', 'single file for board'.").format(cpl_filename, opts.project_dir))
-		return
+		return -1
 
 	logging.info("Netlist file found at: {}".format(netlist_path))
 	logging.info("CPL file found at: {}".format(cpl_path))
@@ -79,5 +79,7 @@ def main():
 		logging.info("JLC BOM file written to: {}".format(bom_output_path))
 		logging.info("JLC CPL file written to: {}".format(cpl_output_path))
 
+	return 0
+
 if __name__ == '__main__':
-	main()
+	sys.exit(main())
