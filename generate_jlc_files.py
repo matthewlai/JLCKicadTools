@@ -30,6 +30,8 @@ def main():
 	parser.add_argument('project_dir', metavar='project directory', type=os.path.abspath, nargs='?', help='Directory of KiCad project', default=os.getcwd())
 	parser.add_argument('-d', '--database', metavar='database', type=str, help='Filename of database', default=os.path.join(os.path.dirname(__file__), "cpl_rotations_db.csv"))
 	parser.add_argument('-v', '--verbose', help='increases log verbosity for each occurrence', dest='verbose_count', action="count", default=0)
+	parser.add_argument('--warn-no-lcsc-partnumber', help='warn if ', dest='warn_no_partnumber', action='store_true')
+	parser.add_argument('--assume-same-lcsc-partnumber', help='assume same lcsc partnumber for all components of a group', action='store_true', dest='assume_same_lcsc_partnumber')
 
 	# Parse arguments
 	opts = parser.parse_args(sys.argv[1:])
@@ -75,9 +77,11 @@ def main():
 	cpl_output_path = os.path.join(opts.project_dir, project_name + "_cpl_jlc.csv")
 
 	db = ReadDB(opts.database)
-	if GenerateBOM(netlist_path, bom_output_path) and FixRotations(cpl_path, cpl_output_path, db):
+	if GenerateBOM(netlist_path, bom_output_path, opts) and FixRotations(cpl_path, cpl_output_path, db):
 		logging.info("JLC BOM file written to: {}".format(bom_output_path))
 		logging.info("JLC CPL file written to: {}".format(cpl_output_path))
+	else:
+		return -1
 
 	return 0
 
