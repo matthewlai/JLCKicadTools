@@ -24,11 +24,10 @@ import argparse
 from jlc_lib.cpl_fix_rotations import ReadDB, FixRotations
 from jlc_lib.generate_bom import GenerateBOM
 
-DB_PATH="cpl_rotations_db.csv"
-
 def main():
 	parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter)
 	parser.add_argument('project_dir', metavar='project directory', type=str, nargs='?', help='Directory of KiCad project', default=os.getcwd())
+	parser.add_argument('-d', '--database', metavar='database', type=str, help='Filename of database', default=os.path.join(os.path.dirname(__file__), "cpl_rotations_db.csv"))
 
 	# Parse arguments
 	opts = parser.parse_args(sys.argv[1:])
@@ -70,7 +69,7 @@ def main():
 	bom_output_path = os.path.join(opts.project_dir, project_name + "_bom_jlc.csv")
 	cpl_output_path = os.path.join(opts.project_dir, project_name + "_cpl_jlc.csv")
 
-	db = ReadDB(DB_PATH)
+	db = ReadDB(opts.database)
 	if GenerateBOM(netlist_path, bom_output_path) and FixRotations(cpl_path, cpl_output_path, db):
 		print("")
 		print("JLC BOM file written to: {}".format(bom_output_path))
