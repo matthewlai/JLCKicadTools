@@ -32,6 +32,7 @@ def main():
 	parser.add_argument('-v', '--verbose', help='increases log verbosity for each occurrence', dest='verbose_count', action="count", default=0)
 	parser.add_argument('--warn-no-lcsc-partnumber', help='warn if ', dest='warn_no_partnumber', action='store_true')
 	parser.add_argument('--assume-same-lcsc-partnumber', help='assume same lcsc partnumber for all components of a group', action='store_true', dest='assume_same_lcsc_partnumber')
+	parser.add_argument('-o', '--output', metavar='output directory', dest='output_dir', type=os.path.abspath, help='Output directory')
 
 	# Parse arguments
 	opts = parser.parse_args(sys.argv[1:])
@@ -41,6 +42,14 @@ def main():
 	if not os.path.isdir(opts.project_dir):
 		logging.error("Failed to open project directory: {}".format(opts.project_dir))
 		return -1
+
+	# Set default output directory
+	if opts.output_dir == None:
+		opts.output_dir = opts.project_dir
+
+	if not os.path.isdir(opts.output_dir):
+		logging.info("Creating output directory {}".format(opts.output_dir))
+		os.mkdir(opts.output_dir)
 
 	project_name = os.path.basename(opts.project_dir)
 	logging.debug("Project name is '%s'.", project_name)
@@ -73,8 +82,8 @@ def main():
 	logging.info("Netlist file found at: {}".format(netlist_path))
 	logging.info("CPL file found at: {}".format(cpl_path))
 
-	bom_output_path = os.path.join(opts.project_dir, project_name + "_bom_jlc.csv")
-	cpl_output_path = os.path.join(opts.project_dir, project_name + "_cpl_jlc.csv")
+	bom_output_path = os.path.join(opts.output_dir, project_name + "_bom_jlc.csv")
+	cpl_output_path = os.path.join(opts.output_dir, project_name + "_cpl_jlc.csv")
 
 	db = ReadDB(opts.database)
 	if GenerateBOM(netlist_path, bom_output_path, opts) and FixRotations(cpl_path, cpl_output_path, db):
