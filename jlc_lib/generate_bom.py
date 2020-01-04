@@ -19,6 +19,7 @@
 from jlc_lib import kicad_netlist_reader
 import csv
 import re
+import logging
 
 LCSC_PART_NUMBER_MATCHER=re.compile('^C[0-9]+$')
 
@@ -28,7 +29,7 @@ def GenerateBOM(input_filename, output_filename):
   try:
     f = open(output_filename, 'w')
   except IOError:
-    print("Failed to open file for writing: {}".format(output_filename))
+    logging.error("Failed to open file for writing: {}".format(output_filename))
     return False
 
   out = csv.writer(f, lineterminator='\n', delimiter=',', quotechar='\"',
@@ -65,6 +66,6 @@ def GenerateBOM(input_filename, output_filename):
     out.writerow([c.getValue(), ",".join(refs), footprint, lcsc_part_number])
     num_groups_found += 1
 
-  print("{} component groups found from BOM file.".format(num_groups_found))
+  logging.info("{} component groups found from BOM file.".format(num_groups_found))
 
   return True

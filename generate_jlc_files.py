@@ -20,6 +20,7 @@ import os
 import re
 import sys
 import argparse
+import logging
 
 from jlc_lib.cpl_fix_rotations import ReadDB, FixRotations
 from jlc_lib.generate_bom import GenerateBOM
@@ -28,12 +29,15 @@ def main():
 	parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter)
 	parser.add_argument('project_dir', metavar='project directory', type=str, nargs='?', help='Directory of KiCad project', default=os.getcwd())
 	parser.add_argument('-d', '--database', metavar='database', type=str, help='Filename of database', default=os.path.join(os.path.dirname(__file__), "cpl_rotations_db.csv"))
+	parser.add_argument('-v', '--verbose', help='increases log verbosity for each occurrence', dest='verbose_count', action="count", default=0)
 
 	# Parse arguments
 	opts = parser.parse_args(sys.argv[1:])
 
+	logging.basicConfig(format="%(message)s", level=max(3 - opts.verbose_count, 0) * 10)
+
 	if not os.path.isdir(opts.project_dir):
-		print("Failed to open project directory: {}".format(opts.project_dir))
+		logging.error("Failed to open project directory: {}".format(opts.project_dir))
 		return
 
 	project_name = os.path.basename(os.path.normpath(opts.project_dir))
@@ -50,31 +54,29 @@ def main():
 				cpl_path = os.path.join(dir_name, file_name)
 
 	if netlist_path is None:
-		print((
+		logging.error((
 			"Failed to find netlist file: {} in {} (and sub-directories). "
 			"Run 'Tools -> Generate Bill of Materials' in Eeschema (any format). "
 			"It will generate an intermediate file we need.").format(netlist_filename, opts.project_dir))
 		return
 
 	if cpl_path is None:
-		print((
+		logging.error((
 			"Failed to find CPL file: {} in {} (and sub-directories). "
 			"Run 'File -> Fabrication Outputs -> Footprint Position (.pos) File' in Pcbnew. "
 			"Settings: 'CSV', 'mm', 'single file for board'.").format(cpl_filename, opts.project_dir))
 		return
 
-	print("Netlist file found at: {}".format(netlist_path))
-	print("CPL file found at: {}".format(cpl_path))
+	logging.info("Netlist file found at: {}".format(netlist_path))
+	logging.info("CPL file found at: {}".format(cpl_path))
 
 	bom_output_path = os.path.join(opts.project_dir, project_name + "_bom_jlc.csv")
 	cpl_output_path = os.path.join(opts.project_dir, project_name + "_cpl_jlc.csv")
 
 	db = ReadDB(opts.database)
 	if GenerateBOM(netlist_path, bom_output_path) and FixRotations(cpl_path, cpl_output_path, db):
-		print("")
-		print("JLC BOM file written to: {}".format(bom_output_path))
-		print("JLC CPL file written to: {}".format(cpl_output_path))
-
+		logging.info("JLC BOM file written to: {}".format(bom_output_path))
+		logging.info("JLC CPL file written to: {}".format(cpl_output_path))
 
 if __name__ == '__main__':
 	main()

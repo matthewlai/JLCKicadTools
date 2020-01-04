@@ -18,6 +18,7 @@
 import csv
 import re
 import sys
+import logging
 
 # JLC requires columns to be named a certain way.
 HEADER_REPLACEMENT_TABLE={
@@ -37,7 +38,7 @@ def ReadDB(filename):
         continue
       else:
         db[re.compile(row[0])] = int(row[1])
-  print("Read {} rules from {}".format(len(db), filename))
+  logging.info("Read {} rules from {}".format(len(db), filename))
   return db
 
 def FixRotations(input_filename, output_filename, db):
@@ -55,10 +56,10 @@ def FixRotations(input_filename, output_filename, db):
           elif row[i] == "Rot":
             rotation_index = i
         if package_index is None:
-          print("Failed to find 'Package' column in the csv file")
+          logging.warning("Failed to find 'Package' column in the csv file")
           return False
         if rotation_index is None:
-          print("Failed to find 'Rot' column in the csv file")
+          logging.warning("Failed to find 'Rot' column in the csv file")
           return False
         # Replace column names with labels JLC wants.
         for i in range(len(row)):
@@ -67,7 +68,7 @@ def FixRotations(input_filename, output_filename, db):
       else:
         for pattern, correction in db.items():
           if pattern.match(row[package_index]):
-            print("Footprint {} matched {}. Applying {} deg correction"
+            logging.info("Footprint {} matched {}. Applying {} deg correction"
                 .format(row[package_index], pattern.pattern, correction))
             row[rotation_index] = (float(row[rotation_index]) + correction) % 360
             break

@@ -38,6 +38,7 @@ import sys
 import xml.sax as sax
 import re
 import pdb
+import logging
 
 #-----<Configure>----------------------------------------------------------------
 
@@ -513,7 +514,7 @@ class netlist():
                             break;
 
             if not c.getLibPart():
-                print( 'missing libpart for ref:', c.getRef(), c.getPartName(), c.getLibName() )
+                logging.error('missing libpart for ref:', c.getRef(), c.getPartName(), c.getLibName() )
 
 
     def aliasMatch(self, partName, aliasList):
@@ -736,7 +737,7 @@ class netlist():
         if len(group) > 0:
             return group[0].getLibPart().getDatasheet()
         else:
-            print("NULL!")
+            logging.error("NULL!")
         return ''
 
     def formatXML(self):
@@ -759,7 +760,7 @@ class netlist():
             self._reader.setContentHandler(_gNetReader(self))
             self._reader.parse(fname)
         except IOError as e:
-            print( __file__, ":", e, file=sys.stderr )
+            Logging.error( __file__, ":", e, file=sys.stderr )
             sys.exit(-1)
 
 
