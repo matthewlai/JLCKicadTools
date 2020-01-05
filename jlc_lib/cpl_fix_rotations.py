@@ -70,7 +70,7 @@ def FixRotations(input_filename, output_filename, db):
           if pattern.match(row[package_index]):
             logging.info("Footprint {} matched {}. Applying {} deg correction"
                 .format(row[package_index], pattern.pattern, correction))
-            row[rotation_index] = (float(row[rotation_index]) + correction) % 360
+            row[rotation_index] = "{0:.6f}".format((float(row[rotation_index]) + correction) % 360)
             break
       writer.writerow(row)
   return True
