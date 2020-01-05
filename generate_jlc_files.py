@@ -25,10 +25,12 @@ import logging
 from jlc_lib.cpl_fix_rotations import ReadDB, FixRotations
 from jlc_lib.generate_bom import GenerateBOM
 
+DEFAULT_DB_PATH="cpl_rotations_db.csv"
+
 def main():
 	parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter)
 	parser.add_argument('project_dir', metavar='project directory', type=os.path.abspath, nargs='?', help='Directory of KiCad project', default=os.getcwd())
-	parser.add_argument('-d', '--database', metavar='database', type=str, help='Filename of database', default=os.path.join(os.path.dirname(__file__), "cpl_rotations_db.csv"))
+	parser.add_argument('-d', '--database', metavar='database', type=str, help='Filename of database', default=os.path.join(os.path.dirname(__file__), DEFAULT_DB_PATH))
 	parser.add_argument('-v', '--verbose', help='increases log verbosity for each occurrence', dest='verbose_count', action="count", default=0)
 	parser.add_argument('--warn-no-lcsc-partnumber', help='warn if ', dest='warn_no_partnumber', action='store_true')
 	parser.add_argument('--assume-same-lcsc-partnumber', help='assume same lcsc partnumber for all components of a group', action='store_true', dest='assume_same_lcsc_partnumber')
