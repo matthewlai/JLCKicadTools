@@ -39,7 +39,8 @@ def main():
 	# Parse arguments
 	opts = parser.parse_args(sys.argv[1:])
 
-	logging.basicConfig(format="%(message)s", level=max(3 - opts.verbose_count, 0) * 10)
+	# Default log level is WARNING
+	logging.basicConfig(format="%(message)s", level=max(logging.WARNING - opts.verbose_count * 10, logging.NOTSET))
 
 	if not os.path.isdir(opts.project_dir):
 		logging.error("Failed to open project directory: {}".format(opts.project_dir))
