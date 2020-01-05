@@ -29,13 +29,20 @@ from jlc_lib.generate_bom import GenerateBOM
 DEFAULT_DB_PATH="cpl_rotations_db.csv"
 
 def main():
-	parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter)
-	parser.add_argument('project_dir', metavar='project directory', type=os.path.abspath, nargs='?', help='Directory of KiCad project', default=os.getcwd())
-	parser.add_argument('-d', '--database', metavar='database', type=str, help='Filename of database', default=os.path.join(os.path.dirname(__file__), DEFAULT_DB_PATH))
-	parser.add_argument('-v', '--verbose', help='increases log verbosity for each occurrence', dest='verbose_count', action="count", default=0)
-	parser.add_argument('--warn-no-lcsc-partnumber', help='warn if ', dest='warn_no_partnumber', action='store_true')
+	parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description='Generates BOM and CPL in CSV fashion to be used in JLCPCB Assembly Service', prog='generate_jlc_files',
+                                    usage='%(prog)s [OPTIONS] INPUT_DIRECTORY')
+	parser.add_argument('project_dir', metavar='INPUT_DIRECTORY', type=os.path.abspath, nargs='?', help='Directory of KiCad project', default=os.getcwd())
+	parser.add_argument('-d', '--database', metavar='DATABASE', type=str, help='Filename of database', default=os.path.join(os.path.dirname(__file__), DEFAULT_DB_PATH))
+	verbosity = parser.add_argument_group('verbosity arguments')
+	verbosity.add_argument('-v', '--verbose', help='increases log verbosity for each occurrence', dest='verbose_count', action="count", default=0)
+	verbosity.add_argument('--warn-no-lcsc-partnumber', help='Set warning output if lcsc part number is not found', dest='warn_no_partnumber', action='store_true')
 	parser.add_argument('--assume-same-lcsc-partnumber', help='assume same lcsc partnumber for all components of a group', action='store_true', dest='assume_same_lcsc_partnumber')
-	parser.add_argument('-o', '--output', metavar='output directory', dest='output_dir', type=os.path.abspath, help='Output directory')
+	parser.add_argument('-o', '--output', metavar='OUTPUT_DIRECTORY', dest='output_dir', type=os.path.abspath, help='Output directory. Default: INPUT_DIRECTORY')
+
+	if (len(sys.argv) == 1):
+		parser.error(
+                'You must provide an input directory.\n'
+                'Type python generate_jlc_files.py --help to see a list of all options.')
 
 	# Parse arguments
 	opts = parser.parse_args(sys.argv[1:])
