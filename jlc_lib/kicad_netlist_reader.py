@@ -514,7 +514,7 @@ class netlist():
                             break;
 
             if not c.getLibPart():
-                logging.error('missing libpart for ref:', c.getRef(), c.getPartName(), c.getLibName() )
+                logging.error('Missing libpart for ref {}: {}:{}'.format(c.getRef(), c.getLibName(), c.getPartName() ))
 
 
     def aliasMatch(self, partName, aliasList):
@@ -760,7 +760,7 @@ class netlist():
             self._reader.setContentHandler(_gNetReader(self))
             self._reader.parse(fname)
         except IOError as e:
-            Logging.error( __file__, ":", e, file=sys.stderr )
+            logging.error("{}: {}".format(__file__, e))
             sys.exit(-1)
 
 
