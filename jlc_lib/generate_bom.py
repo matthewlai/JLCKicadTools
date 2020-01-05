@@ -85,7 +85,7 @@ def GenerateBOM(input_filename, output_filename, opts):
     footprints_set = set(footprints)
     footprints_set_without_none = footprints_set - set([None])
     if len(footprints_set_without_none) == 0:
-      logging.warning("No footprint found for components {}".format(",".join(refs)))
+      logging.error("No footprint found for components {}".format(",".join(refs)))
       return False
     if len(footprints_set_without_none) != 1:
       logging.error("Components {components} from same group have different foot prints: {footprints}".format(
