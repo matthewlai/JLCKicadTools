@@ -27,7 +27,7 @@ def GenerateBOM(input_filename, output_filename, opts):
   net = kicad_netlist_reader.netlist(input_filename)
 
   try:
-    f = open(output_filename, 'w')
+    f = open(output_filename, mode='w', encoding='utf-8')
   except IOError:
     logging.error("Failed to open file for writing: {}".format(output_filename))
     return False
