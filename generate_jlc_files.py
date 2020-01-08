@@ -29,8 +29,7 @@ from jlc_lib.generate_bom import GenerateBOM
 DEFAULT_DB_PATH="cpl_rotations_db.csv"
 
 def main():
-	parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description='Generates BOM and CPL in CSV fashion to be used in JLCPCB Assembly Service', prog='generate_jlc_files',
-                                    usage='%(prog)s [OPTIONS] INPUT_DIRECTORY')
+	parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description='Generates BOM and CPL in CSV fashion to be used in JLCPCB Assembly Service', prog='generate_jlc_files')
 	parser.add_argument('project_dir', metavar='INPUT_DIRECTORY', type=os.path.abspath, help='Directory of KiCad project. Name should match KiCad project name.')
 	parser.add_argument('-d', '--database', metavar='DATABASE', type=str, help='Filename of database', default=os.path.join(os.path.dirname(__file__), DEFAULT_DB_PATH))
 	verbosity = parser.add_argument_group('verbosity arguments')
@@ -78,7 +77,7 @@ def main():
 	if netlist_path is None:
 		logging.error((
 			"Failed to find netlist file: {} in {} (and sub-directories). "
-			"It is INPUT_DIRECTORY a KiCad Project? "
+			"Is the input directory a KiCad project? "
 			"If so, run 'Tools -> Generate Bill of Materials' in Eeschema (any format). "
 			"It will generate an intermediate file we need.").format(netlist_filename, opts.project_dir))
 		return errno.ENOENT
