@@ -23,8 +23,8 @@ import argparse
 import logging
 import errno
 
-from jlc_lib.cpl_fix_rotations import ReadDB, FixRotations
-from jlc_lib.generate_bom import GenerateBOM
+from jlc_kicad_tools.jlc_lib.cpl_fix_rotations import ReadDB, FixRotations
+from jlc_kicad_tools.jlc_lib.generate_bom import GenerateBOM
 
 DEFAULT_DB_PATH="cpl_rotations_db.csv"
 

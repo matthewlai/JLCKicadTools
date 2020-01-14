@@ -1,4 +1,35 @@
 # JLCKicadTools
-Tool for using JLCPCB assembly service with KiCad 5.
+
+## Overview
+
+JLCKicadTools is a tool aims to work with JLCPCB assembly service featuring KiCad 5.
 
 See [this blog post](https://dubiouscreations.com/2019/10/21/using-kicad-with-jlcpcb-assembly-service) for instructions.
+
+## Requirements
+Python 3.7+
+
+### Installation
+```
+pip install git+https://github.com/matthewlai/JLCKicadTools
+```
+
+In case you do not have pip installed. See:
+
+### Fedora
+```
+sudo dnf install python-pip
+```
+
+### Debian and Ubuntu
+```
+sudo apt-get install python-pip
+```
+
+### How to use
+JLCKicadTools comes as a nice command line interface named kicad-jlc-tool.
+To see how it works just simply issue at your shell prompt:
+
+```
+$ jlc-kicad-tools 
+```

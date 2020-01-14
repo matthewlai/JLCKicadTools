@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with JLC Kicad Tools.  If not, see <https://www.gnu.org/licenses/>.
 
-from jlc_lib import kicad_netlist_reader
+from jlc_kicad_tools.jlc_lib import kicad_netlist_reader
 import csv
 import re
 import logging
