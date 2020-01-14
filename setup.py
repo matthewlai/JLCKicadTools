@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
-from kicad_jlc_tool import __version__
+from jlc_kicad_tools import __version__
 
 setup(
-    name='kicad-jlc-tool',
+    name='jlc-kicad-tools',
     version=__version__,
     description='JLCKicadTools is a tool aims to work with JLCPCB assembly service featuring KiCad 5',
     long_description=open('README.md').read(),
@@ -12,5 +12,5 @@ setup(
     license='GPL3',
     packages=find_packages(),
     include_package_data=True,
-    entry_points={"console_scripts": ["kicad-jlc-tool=kicad_jlc_tool.generate_jlc_files:main"]},
+    entry_points={"console_scripts": ["jlc-kicad-tools=jlc_kicad_tools.generate_jlc_files:main"]},
 )

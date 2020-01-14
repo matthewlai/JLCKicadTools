@@ -31,5 +31,5 @@ JLCKicadTools comes as a nice command line interface named kicad-jlc-tool.
 To see how it works just simply issue at your shell prompt:
 
 ```
-$ kicad-jlc-tool 
+$ jlc-kicad-tools 
 ```
