@@ -53,7 +53,7 @@ def GenerateBOM(input_filename, output_filename, opts):
 
       # Get the field name for the LCSC part number.
       for field_name in c.getFieldNames():
-        field_value = c.getField(field_name)
+        field_value = c.getField(field_name).strip()
 
         if LCSC_PART_NUMBER_MATCHER.match(field_value):
           lcsc_part_number = field_value
