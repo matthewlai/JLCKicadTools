@@ -79,7 +79,8 @@ def main():
 			"Failed to find netlist file: {} in {} (and sub-directories). "
 			"Is the input directory a KiCad project? "
 			"If so, run 'Tools -> Generate Bill of Materials' in Eeschema (any format). "
-			"It will generate an intermediate file we need.").format(netlist_filename, opts.project_dir))
+			"It will generate an intermediate file we need. "
+			"Note that this is not the same as a netlist for Pcbnew.").format(netlist_filename, opts.project_dir))
 		return errno.ENOENT
 
 	if cpl_path is None:
