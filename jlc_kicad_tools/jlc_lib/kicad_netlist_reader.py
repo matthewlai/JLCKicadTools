@@ -354,7 +354,8 @@ class comp():
         result = False
         if self.getValue() == other.getValue():
             if self.getFootprint() == other.getFootprint():
-                result = True
+                if self.getRef().rstrip(string.digits) == other.getRef().rstrip(string.digits):
+                    result = True
         return result
 
     def setLibPart(self, part):
@@ -676,7 +677,7 @@ class netlist():
                 # Check every other ungrouped component against this component
                 # and add to the group as necessary
                 for ci in components:
-                    if ci.grouped == False and ci == c and c.getRef().rstrip(string.digits) == ci.getRef().rstrip(string.digits):
+                    if ci.grouped == False and ci == c:
                         newgroup.append(ci)
                         ci.grouped = True
 
