@@ -39,6 +39,7 @@ import xml.sax as sax
 import re
 import pdb
 import logging
+import string
 
 #-----<Configure>----------------------------------------------------------------
 
@@ -675,7 +676,7 @@ class netlist():
                 # Check every other ungrouped component against this component
                 # and add to the group as necessary
                 for ci in components:
-                    if ci.grouped == False and ci == c:
+                    if ci.grouped == False and ci == c and c.getRef().rstrip(string.digits) == ci.getRef().rstrip(string.digits):
                         newgroup.append(ci)
                         ci.grouped = True
 
