@@ -69,10 +69,12 @@ def main():
 
 	for dir_name, subdir_list, file_list in os.walk(opts.project_dir):
 		for file_name in file_list:
-			if file_name == netlist_filename:
+			if file_name == netlist_filename and not netlist_path:
 				netlist_path = os.path.join(dir_name, file_name)
-			elif file_name == cpl_filename:
+			elif file_name == cpl_filename and not cpl_path:
 				cpl_path = os.path.join(dir_name, file_name)
+		if netlist_path and cpl_path:
+			break
 
 	if netlist_path is None:
 		logging.error((
