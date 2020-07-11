@@ -7,7 +7,7 @@ JLCKicadTools is a tool aims to work with JLCPCB assembly service featuring KiCa
 See [this blog post](https://dubiouscreations.com/2019/10/21/using-kicad-with-jlcpcb-assembly-service) for instructions.
 
 ## Requirements
-Python 3.7+
+Python 3.6+
 
 ### Installation
 ```
