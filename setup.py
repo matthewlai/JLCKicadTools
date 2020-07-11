@@ -12,5 +12,6 @@ setup(
     license='GPL3',
     packages=find_packages(),
     include_package_data=True,
+    python_requires='>=3.6',
     entry_points={"console_scripts": ["jlc-kicad-tools=jlc_kicad_tools.generate_jlc_files:main"]},
 )
