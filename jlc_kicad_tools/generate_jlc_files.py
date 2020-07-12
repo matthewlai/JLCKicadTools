@@ -36,6 +36,7 @@ def main():
 	verbosity.add_argument('-v', '--verbose', help='Increases log verbosity for each occurrence', dest='verbose_count', action="count", default=0)
 	verbosity.add_argument('--warn-no-lcsc-partnumber', help='Enable warning output if lcsc part number is not found', dest='warn_no_partnumber', action='store_true')
 	parser.add_argument('--assume-same-lcsc-partnumber', help='Assume same lcsc partnumber for all components of a group', action='store_true', dest='assume_same_lcsc_partnumber')
+	parser.add_argument('--include-all-component-groups', help='Include component groups without LCSC part numbers in the BOM', action='store_true', dest='include_all_groups')
 	parser.add_argument('-o', '--output', metavar='OUTPUT_DIRECTORY', dest='output_dir', type=os.path.abspath, help='Output directory. Default: INPUT_DIRECTORY')
 
 	if (len(sys.argv) == 1):
