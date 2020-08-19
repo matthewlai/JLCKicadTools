@@ -1,4 +1,6 @@
 "Footprint pattern","Correction"
+"^R_Array_Convex_",90
+"^R_Array_Concave_",90
 "^SOT-223",180
 "^SOT-23",180
 "^SOT-353",180
