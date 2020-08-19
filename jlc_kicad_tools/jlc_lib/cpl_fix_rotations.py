@@ -49,6 +49,8 @@ def FixRotations(input_filename, output_filename, db):
     writer = csv.writer(open(output_filename, 'w', newline=''), delimiter=',')
     package_index = None
     rotation_index = None
+    posx_index = None
+    side_index = None
     for row in reader:
       if not package_index:
         # This is the first row. Find "Package" and "Rot" column indices.
@@ -57,6 +59,10 @@ def FixRotations(input_filename, output_filename, db):
             package_index = i
           elif row[i] == "Rot":
             rotation_index = i
+          elif row[i] == "PosX":
+            posx_index = i
+          elif row[i] == "Side":
+            side_index = i
         if package_index is None:
           _LOGGER.logger.warning("Failed to find 'Package' column in the csv file")
           return False
@@ -68,11 +74,19 @@ def FixRotations(input_filename, output_filename, db):
           if row[i] in HEADER_REPLACEMENT_TABLE:
             row[i] = HEADER_REPLACEMENT_TABLE[row[i]]
       else:
+        rotation = float(row[rotation_index])
+        if posx_index is not None and side_index is not None:
+            if row[side_index].strip() == "bottom":
+                row[posx_index] = "{0:.6f}".format(-float(row[posx_index]))
         for pattern, correction in db.items():
           if pattern.match(row[package_index]):
             _LOGGER.logger.info("Footprint {} matched {}. Applying {} deg correction"
                 .format(row[package_index], pattern.pattern, correction))
-            row[rotation_index] = "{0:.6f}".format((float(row[rotation_index]) + correction) % 360)
+            if side_index is not None and row[side_index].strip() == "bottom":
+                rotation = (rotation - correction) % 360
+            else:
+                rotation = (rotation + correction) % 360
+            row[rotation_index] = "{0:.6f}".format(rotation)
             break
       writer.writerow(row)
   return True
