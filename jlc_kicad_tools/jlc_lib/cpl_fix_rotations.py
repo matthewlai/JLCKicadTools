@@ -18,7 +18,7 @@
 import csv
 import re
 import sys
-import logging
+from jlc_kicad_tools.logger import Log
 
 # JLC requires columns to be named a certain way.
 HEADER_REPLACEMENT_TABLE={
@@ -29,6 +29,8 @@ HEADER_REPLACEMENT_TABLE={
   "Side": "Layer"
 }
 
+_LOGGER = Log()
+
 def ReadDB(filename):
   db = {}
   with open(filename) as csvfile:
@@ -38,7 +40,7 @@ def ReadDB(filename):
         continue
       else:
         db[re.compile(row[0])] = int(row[1])
-  logging.info("Read {} rules from {}".format(len(db), filename))
+  _LOGGER.logger.info("Read {} rules from {}".format(len(db), filename))
   return db
 
 def FixRotations(input_filename, output_filename, db):
@@ -56,10 +58,10 @@ def FixRotations(input_filename, output_filename, db):
           elif row[i] == "Rot":
             rotation_index = i
         if package_index is None:
-          logging.warning("Failed to find 'Package' column in the csv file")
+          _LOGGER.logger.warning("Failed to find 'Package' column in the csv file")
           return False
         if rotation_index is None:
-          logging.warning("Failed to find 'Rot' column in the csv file")
+          _LOGGER.logger.warning("Failed to find 'Rot' column in the csv file")
           return False
         # Replace column names with labels JLC wants.
         for i in range(len(row)):
@@ -68,7 +70,7 @@ def FixRotations(input_filename, output_filename, db):
       else:
         for pattern, correction in db.items():
           if pattern.match(row[package_index]):
-            logging.info("Footprint {} matched {}. Applying {} deg correction"
+            _LOGGER.logger.info("Footprint {} matched {}. Applying {} deg correction"
                 .format(row[package_index], pattern.pattern, correction))
             row[rotation_index] = "{0:.6f}".format((float(row[rotation_index]) + correction) % 360)
             break
