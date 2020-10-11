@@ -12,6 +12,7 @@ Python 3.6+
 ### Installation
 ```
 pip install git+https://github.com/matthewlai/JLCKicadTools
+pip install -r requirements.txt
 ```
 
 In case you do not have pip installed. See:
@@ -31,5 +32,5 @@ JLCKicadTools comes as a nice command line interface named kicad-jlc-tool.
 To see how it works just simply issue at your shell prompt:
 
 ```
-$ jlc-kicad-tools 
+$ jlc-kicad-tools
 ```
