@@ -19,7 +19,9 @@
 from jlc_kicad_tools.jlc_lib import kicad_netlist_reader
 import csv
 import re
-import logging
+from jlc_kicad_tools.logger import Log
+
+_LOGGER = Log()
 
 LCSC_PART_NUMBER_MATCHER=re.compile('^C[0-9]+$')
 
@@ -29,7 +31,7 @@ def GenerateBOM(input_filename, output_filename, opts):
   try:
     f = open(output_filename, mode='w', encoding='utf-8')
   except IOError:
-    logging.error("Failed to open file for writing: {}".format(output_filename))
+    _LOGGER.logger.error("Failed to open file for writing: {}".format(output_filename))
     return False
 
   out = csv.writer(f, lineterminator='\n', delimiter=',', quotechar='\"',
@@ -69,10 +71,10 @@ def GenerateBOM(input_filename, output_filename, opts):
     # Check part numbers for uniqueness
     if len(lcsc_part_numbers) == 0 and not opts.include_all_groups:
       if opts.warn_no_partnumber:
-        logging.warning("No LCSC part number found for components {}".format(",".join(refs)))
+        _LOGGER.logger.warning("No LCSC part number found for components {}".format(",".join(refs)))
       continue
     elif len(lcsc_part_numbers) > 1:
-      logging.error("Components {components} from same group have different LCSC part numbers: {partnumbers}".format(
+      _LOGGER.logger.error("Components {components} from same group have different LCSC part numbers: {partnumbers}".format(
           components = ", ".join(refs),
           partnumbers = ", ".join(lcsc_part_numbers)))
       return False
@@ -83,17 +85,17 @@ def GenerateBOM(input_filename, output_filename, opts):
       lcsc_part_number = 'no_part_number'
 
     if (not opts.assume_same_lcsc_partnumber) and (lcsc_part_numbers_none_found and not opts.include_all_groups):
-      logging.error("Components {components} from same group do not all have LCSC part number {partnumber} set. Use --assume-same-lcsc-partnumber to ignore.".format(
+      _LOGGER.logger.error("Components {components} from same group do not all have LCSC part number {partnumber} set. Use --assume-same-lcsc-partnumber to ignore.".format(
           components = ", ".join(refs),
           partnumber = lcsc_part_number))
       return False
 
     # Check footprints for uniqueness
     if (len(footprints) == 0):
-      logging.error("No footprint found for components {}".format(",".join(refs)))
+      _LOGGER.logger.error("No footprint found for components {}".format(",".join(refs)))
       return False
     if len(footprints) != 1:
-      logging.error("Components {components} from same group have different foot prints: {footprints}".format(
+      _LOGGER.logger.error("Components {components} from same group have different foot prints: {footprints}".format(
           components = ", ".join(refs),
           footprints = ", ".join(footprints)))
       return False
@@ -106,6 +108,6 @@ def GenerateBOM(input_filename, output_filename, opts):
     out.writerow([c.getValue(), ",".join(refs), footprint, lcsc_part_number])
     num_groups_found += 1
 
-  logging.info("{} component groups found from BOM file.".format(num_groups_found))
+  _LOGGER.logger.info("{} component groups found from BOM file.".format(num_groups_found))
 
   return True

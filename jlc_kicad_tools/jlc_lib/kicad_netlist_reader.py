@@ -38,8 +38,10 @@ import sys
 import xml.sax as sax
 import re
 import pdb
-import logging
 import string
+from jlc_kicad_tools.logger import Log
+
+_LOGGER = Log()
 
 #-----<Configure>----------------------------------------------------------------
 
@@ -516,7 +518,7 @@ class netlist():
                             break;
 
             if not c.getLibPart():
-                logging.error('Missing libpart for ref {}: {}:{}'.format(c.getRef(), c.getLibName(), c.getPartName() ))
+                _LOGGER.logger.error('Missing libpart for ref {}: {}:{}'.format(c.getRef(), c.getLibName(), c.getPartName() ))
 
 
     def aliasMatch(self, partName, aliasList):
@@ -739,7 +741,7 @@ class netlist():
         if len(group) > 0:
             return group[0].getLibPart().getDatasheet()
         else:
-            logging.error("NULL!")
+            _LOGGER.logger.error("NULL!")
         return ''
 
     def formatXML(self):
@@ -762,7 +764,7 @@ class netlist():
             self._reader.setContentHandler(_gNetReader(self))
             self._reader.parse(fname)
         except IOError as e:
-            logging.error("{}: {}".format(__file__, e))
+            _LOGGER.logger.error("{}: {}".format(__file__, e))
             sys.exit(-1)
 
 
