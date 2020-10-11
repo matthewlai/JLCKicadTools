@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# Copyright (C) 2019 Matthew Lai
+# Copyright (C) 2019-2020 Matthew Lai
+# Copyright (C) 2019-2020 Kiara Navarro
 #
 # This file is part of JLC Kicad Tools.
 #
@@ -21,13 +22,12 @@ import logzero
 
 class Log:
     def __init__(self):
-        log_format = '%(color)s[%(levelname)s - %(asctime)-s]%(end_color)s %(message)s'
-        date_format = '%H:%M:%S'
-        formatter = logzero.LogFormatter(fmt=log_format, datefmt=date_format)
+        log_format = '%(color)s[%(levelname)s]%(end_color)s %(message)s'
+        formatter = logzero.LogFormatter(fmt=log_format)
         logzero.setup_default_logger(formatter=formatter)
         self.logger = logzero.logger
 
-    def setLevel(self, level):
+    def SetLevel(self, level):
         # Default log level is WARNING
         logzero.loglevel(max(logging.WARNING - level * 10, logging.NOTSET))
         self.logger.debug("Log level to %s", max(logging.WARNING - level * 10, logging.NOTSET))
