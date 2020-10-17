@@ -69,20 +69,25 @@ def FixRotations(input_filename, output_filename, db):
         if rotation_index is None:
           _LOGGER.logger.warning("Failed to find 'Rot' column in the csv file")
           return False
+        if side_index is None:
+          _LOGGER.logger.warning("Failed to find 'Side' column in the csv file")
+          return False
+        if posx_index is None:
+          _LOGGER.logger.warning("Failed to find 'PosX' column in the csv file")
+          return False
         # Replace column names with labels JLC wants.
         for i in range(len(row)):
           if row[i] in HEADER_REPLACEMENT_TABLE:
             row[i] = HEADER_REPLACEMENT_TABLE[row[i]]
       else:
         rotation = float(row[rotation_index])
-        if posx_index is not None and side_index is not None:
-            if row[side_index].strip() == "bottom":
-                row[posx_index] = "{0:.6f}".format(-float(row[posx_index]))
+        if row[side_index].strip() == "bottom":
+          row[posx_index] = "{0:.6f}".format(-float(row[posx_index]))
         for pattern, correction in db.items():
           if pattern.match(row[package_index]):
             _LOGGER.logger.info("Footprint {} matched {}. Applying {} deg correction"
                 .format(row[package_index], pattern.pattern, correction))
-            if side_index is not None and row[side_index].strip() == "bottom":
+            if row[side_index].strip() == "bottom":
                 rotation = (rotation - correction) % 360
             else:
                 rotation = (rotation + correction) % 360
