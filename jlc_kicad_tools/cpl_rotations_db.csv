@@ -21,3 +21,5 @@
 "^CP_Elec_8x6.7",180
 "^(.*?_|V)?QFN-(16|20|24|28|40)(-|_|$)",270
 "^Bosch_LGA-8_2x2.5mm_P0.65mm_ClockwisePinNumbering",90
+"^PowerPAK_SO-8_Single",270
+"^HTSSOP-28-1EP_4.4x9.7mm*",270
