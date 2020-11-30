@@ -33,7 +33,8 @@ _LOGGER = Log()
 
 def GetOpts():
 	parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description='Generates BOM and CPL in CSV fashion to be used in JLCPCB Assembly Service', prog='jlc-kicad-tools')
-	parser.add_argument('project_dir', metavar='INPUT_DIRECTORY', type=os.path.abspath, help='Directory of KiCad project. Name should match KiCad project name.')
+	parser.add_argument('project_dir', metavar='INPUT_DIRECTORY', type=os.path.abspath, help='Directory of KiCad project. If the KiCad project name doesn\t match the directory name, make use of the PROJECT_NAME argument.')
+	parser.add_argument('-n', '--project_name', metavar='PROJECT_NAME', type=str, help='The name of the KiCad project in case it doesn\'t match the directory name.', default=None)
 	parser.add_argument('-d', '--database', metavar='DATABASE', type=str, help='Filename of database', default=os.path.join(os.path.dirname(__file__), DEFAULT_DB_PATH))
 	verbosity = parser.add_argument_group('verbosity arguments')
 	verbosity.add_argument('-v', '--verbose', help='Increases log verbosity for each occurrence', dest='verbose_count', action="count", default=0)
@@ -66,7 +67,10 @@ def main():
 		_LOGGER.logger.info("Creating output directory {}".format(opts.output_dir))
 		os.mkdir(opts.output_dir)
 
-	project_name = os.path.basename(opts.project_dir)
+	if opts.project_name:
+		project_name = opts.project_name
+	else:
+		project_name = os.path.basename(opts.project_dir)
 	_LOGGER.logger.debug("Project name is '%s'.", project_name)
 
 	netlist_filename = project_name + ".xml"
