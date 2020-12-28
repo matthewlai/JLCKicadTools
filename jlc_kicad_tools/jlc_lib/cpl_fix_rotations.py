@@ -19,6 +19,8 @@ import csv
 import re
 import sys
 from jlc_kicad_tools.logger import Log
+import xml.etree.ElementTree as ET
+
 
 # JLC requires columns to be named a certain way.
 HEADER_REPLACEMENT_TABLE={
@@ -43,6 +45,20 @@ def ReadDB(filename):
   _LOGGER.logger.info("Read {} rules from {}".format(len(db), filename))
   return db
 
+def ReadNetlistJLCPCBRotation(netlist_filename):
+	# Parse the NETLIST looking for custom fields named JLCPCBRotation (case sensitive)
+	fixed_rotation_db = {}
+	tree = ET.parse(netlist_filename)
+	root = tree.getroot()	
+	for component in root.findall('components/comp'):
+		JLCPCBRotation = component.find('./fields/field[@name="JLCPCBRotation"]')
+		if JLCPCBRotation!=None:
+			angle =float(JLCPCBRotation.text)
+			ref = component.attrib["ref"]
+			fixed_rotation_db[ref]=angle
+			_LOGGER.logger.info("JLCPCBRotation override applied to {} {:.6f}".format(ref,angle))
+	return fixed_rotation_db
+  
 def FixRotations(input_filename, output_filename, db, fixed_rotation_db):
   with open(input_filename) as csvfile:
     reader = csv.reader(csvfile, delimiter=',')
