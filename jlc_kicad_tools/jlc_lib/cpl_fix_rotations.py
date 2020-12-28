@@ -43,7 +43,7 @@ def ReadDB(filename):
   _LOGGER.logger.info("Read {} rules from {}".format(len(db), filename))
   return db
 
-def FixRotations(input_filename, output_filename, db):
+def FixRotations(input_filename, output_filename, db, fixed_rotation_db):
   with open(input_filename) as csvfile:
     reader = csv.reader(csvfile, delimiter=',')
     writer = csv.writer(open(output_filename, 'w', newline=''), delimiter=',')
@@ -51,12 +51,15 @@ def FixRotations(input_filename, output_filename, db):
     rotation_index = None
     posx_index = None
     side_index = None
+    ref_index = None
     for row in reader:
       if not package_index:
         # This is the first row. Find "Package" and "Rot" column indices.
         for i in range(len(row)):
           if row[i] == "Package":
             package_index = i
+          elif row[i] == "Ref":
+            ref_index = i
           elif row[i] == "Rot":
             rotation_index = i
           elif row[i] == "PosX":
@@ -65,6 +68,9 @@ def FixRotations(input_filename, output_filename, db):
             side_index = i
         if package_index is None:
           _LOGGER.logger.warning("Failed to find 'Package' column in the csv file")
+          return False
+        if ref_index is None:
+          _LOGGER.logger.warning("Failed to find 'Ref' column in the csv file")
           return False
         if rotation_index is None:
           _LOGGER.logger.warning("Failed to find 'Rot' column in the csv file")
@@ -92,6 +98,12 @@ def FixRotations(input_filename, output_filename, db):
             else:
                 rotation = (rotation + correction) % 360
             row[rotation_index] = "{0:.6f}".format(rotation)
+            break
+        for ref, angle in fixed_rotation_db.items():
+          if ref==row[ref_index]:
+            _LOGGER.logger.info("Reference {},  fixed {} deg correction"
+                .format(row[ref_index], angle))
+            row[rotation_index] = "{0:.6f}".format(angle)
             break
       writer.writerow(row)
   return True

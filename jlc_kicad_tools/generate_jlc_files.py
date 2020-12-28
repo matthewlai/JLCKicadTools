@@ -23,6 +23,8 @@ import sys
 import argparse
 import errno
 
+import xml.etree.ElementTree as ET
+
 from jlc_kicad_tools.logger import Log
 from jlc_kicad_tools.jlc_lib.cpl_fix_rotations import ReadDB, FixRotations
 from jlc_kicad_tools.jlc_lib.generate_bom import GenerateBOM
@@ -110,7 +112,21 @@ def main():
 	cpl_output_path = os.path.join(opts.output_dir, project_name + "_cpl_jlc.csv")
 
 	db = ReadDB(opts.database)
-	if GenerateBOM(netlist_path, bom_output_path, opts) and FixRotations(cpl_path, cpl_output_path, db):
+	
+	# Parse the NETLIST looking for custom fields named JLCPCBRotation (case sensitive)
+	fixed_rotation_db = {}
+	tree = ET.parse(netlist_path)
+	root = tree.getroot()	
+	for component in root.findall('components/comp'):
+		JLCPCBRotation = component.find('./fields/field[@name="JLCPCBRotation"]')
+		if JLCPCBRotation!=None:
+			angle =float(JLCPCBRotation.text)
+			ref = component.attrib["ref"]
+			fixed_rotation_db[ref]=angle
+			_LOGGER.logger.info("JLCPCBRotation override applied to {} {:.6f}".format(ref,angle))
+
+	
+	if GenerateBOM(netlist_path, bom_output_path, opts) and FixRotations(cpl_path, cpl_output_path, db, fixed_rotation_db):
 		_LOGGER.logger.info("JLC BOM file written to: {}".format(bom_output_path))
 		_LOGGER.logger.info("JLC CPL file written to: {}".format(cpl_output_path))
 	else:
