@@ -35,7 +35,7 @@ def GetOpts():
 	parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description='Generates BOM and CPL in CSV fashion to be used in JLCPCB Assembly Service', prog='jlc-kicad-tools')
 	parser.add_argument('project_dir', metavar='INPUT_DIRECTORY', type=os.path.abspath, help='Directory of KiCad project. If the KiCad project name doesn\t match the directory name, make use of the PROJECT_NAME argument.')
 	parser.add_argument('-n', '--project_name', metavar='PROJECT_NAME', type=str, help='The name of the KiCad project in case it doesn\'t match the directory name.', default=None)
-	parser.add_argument('-d', '--database', metavar='DATABASE', type=str, help='Filename of database', default=os.path.join(os.path.dirname(__file__), DEFAULT_DB_PATH))
+	parser.add_argument('-d', '--database', metavar='DATABASE', type=str, help='Filename of database (may be specified more than once)', default=[os.path.join(os.path.dirname(__file__), DEFAULT_DB_PATH)], action='append')
 	verbosity = parser.add_argument_group('verbosity arguments')
 	verbosity.add_argument('-v', '--verbose', help='Increases log verbosity for each occurrence', dest='verbose_count', action="count", default=0)
 	verbosity.add_argument('--warn-no-lcsc-partnumber', help='Enable warning output if lcsc part number is not found', dest='warn_no_partnumber', action='store_true')
@@ -109,7 +109,9 @@ def main():
 	bom_output_path = os.path.join(opts.output_dir, project_name + "_bom_jlc.csv")
 	cpl_output_path = os.path.join(opts.output_dir, project_name + "_cpl_jlc.csv")
 
-	db = ReadDB(opts.database)
+	db = {}
+	for filename in opts.database:
+		db.update(ReadDB(filename))
 	if GenerateBOM(netlist_path, bom_output_path, opts) and FixRotations(cpl_path, cpl_output_path, db):
 		_LOGGER.logger.info("JLC BOM file written to: {}".format(bom_output_path))
 		_LOGGER.logger.info("JLC CPL file written to: {}".format(cpl_output_path))
