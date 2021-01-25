@@ -34,3 +34,8 @@ To see how it works just simply issue at your shell prompt:
 ```
 $ jlc-kicad-tools
 ```
+
+### FAQ
+1. Why are some components in the generated files but don't show up on JLCPCB preview?
+
+    * Make sure there are no non-ASCII characters in any of the fields. See: https://github.com/matthewlai/JLCKicadTools/issues/45
