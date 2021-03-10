@@ -23,6 +23,7 @@
 "^CP_Elec_6.3x7.7",180
 "^CP_Elec_8x6.7",180
 "^CP_Elec_8x10",180
+"^CP_Elec_10x10",180
 "^(.*?_|V)?QFN-(16|20|24|28|40)(-|_|$)",270
 "^Bosch_LGA-8_2x2.5mm_P0.65mm_ClockwisePinNumbering",90
 "^PowerPAK_SO-8_Single",270
@@ -32,5 +33,8 @@
 "ESP32-WROOM-32",270
 "^SOIC127P798X216-8N",-90
 "^Relay_DPDT_Omron_G6K-2F",-90
+"^Relay_DPDT_Omron_G6S-2F",-90
 "^SW_DIP_SPSTx01_Slide_Copal_CHS-01B_W7.62mm_P1.27mm",-180
 "^BatteryHolder_Keystone_1060_1x2032",-180
+"^SO-14",-90
+"^HTSSOP-",270
