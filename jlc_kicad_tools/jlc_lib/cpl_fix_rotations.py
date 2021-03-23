@@ -86,7 +86,7 @@ def FixRotations(input_filename, output_filename, db):
         # Very old KiCad versions export with positive X. Less old KiCad versions export
         # with negative X. New KiCad versions (>5.1.7) have a checkbox to support both.
         # We auto-detect here so we can support both.
-        flip_x = row[side_index.strip()] == "bottom" and float(row[posx_index]) < 0.0
+        flip_x = row[side_index].strip() == "bottom" and float(row[posx_index]) < 0.0
         if flip_x:
           row[posx_index] = "{0:.6f}".format(-float(row[posx_index]))
 
