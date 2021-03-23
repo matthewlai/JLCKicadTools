@@ -81,13 +81,20 @@ def FixRotations(input_filename, output_filename, db):
             row[i] = HEADER_REPLACEMENT_TABLE[row[i]]
       else:
         rotation = float(row[rotation_index])
-        if row[side_index].strip() == "bottom":
+        
+        # JLC expects positions on the bottom to have positive X.
+        # Very old KiCad versions export with positive X. Less old KiCad versions export
+        # with negative X. New KiCad versions (>5.1.7) have a checkbox to support both.
+        # We auto-detect here so we can support both.
+        flip_x = row[side_index].strip() == "bottom" and float(row[posx_index]) < 0.0
+        if flip_x:
           row[posx_index] = "{0:.6f}".format(-float(row[posx_index]))
+
         for pattern, correction in db.items():
           if pattern.match(row[package_index]):
             _LOGGER.logger.info("Footprint {} matched {}. Applying {} deg correction"
                 .format(row[package_index], pattern.pattern, correction))
-            if row[side_index].strip() == "bottom":
+            if flip_x:
                 rotation = (rotation - correction) % 360
             else:
                 rotation = (rotation + correction) % 360
