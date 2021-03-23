@@ -94,7 +94,7 @@ def FixRotations(input_filename, output_filename, db):
           if pattern.match(row[package_index]):
             _LOGGER.logger.info("Footprint {} matched {}. Applying {} deg correction"
                 .format(row[package_index], pattern.pattern, correction))
-            if flip_x:
+            if row[side_index].strip() == "bottom":
                 rotation = (rotation - correction) % 360
             else:
                 rotation = (rotation + correction) % 360
