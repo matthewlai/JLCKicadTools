@@ -33,8 +33,6 @@
 "^USB_C_Receptacle_HRO_TYPE-C-31-M-12*",180
 "ESP32-WROOM-32",270
 "^SOIC127P798X216-8N",-90
-"^Relay_DPDT_Omron_G6K-2F",-90
-"^Relay_DPDT_Omron_G6S-2F",-90
 "^SW_DIP_SPSTx01_Slide_Copal_CHS-01B_W7.62mm_P1.27mm",-180
 "^BatteryHolder_Keystone_1060_1x2032",-180
 "^SO-14",-90
