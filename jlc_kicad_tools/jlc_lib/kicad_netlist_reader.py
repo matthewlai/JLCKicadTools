@@ -260,7 +260,6 @@ class xmlElement():
             ret = child.get(elemName, attribute, attrmatch)
             if ret != "":
                 if type(ret) != str: ret = ret.encode('utf-8')
-                # print("R: ", ret)
                 return ret
 
         ret = ""
