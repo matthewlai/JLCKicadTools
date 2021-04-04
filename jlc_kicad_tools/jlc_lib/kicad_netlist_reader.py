@@ -38,10 +38,8 @@ import sys
 import xml.sax as sax
 import re
 import pdb
+import logging
 import string
-from jlc_kicad_tools.logger import Log
-
-_LOGGER = Log()
 
 #-----<Configure>----------------------------------------------------------------
 
@@ -262,6 +260,7 @@ class xmlElement():
             ret = child.get(elemName, attribute, attrmatch)
             if ret != "":
                 if type(ret) != str: ret = ret.encode('utf-8')
+                # print("R: ", ret)
                 return ret
 
         ret = ""
@@ -409,6 +408,7 @@ class comp():
         if fields:
             for f in fields.getChildren():
                 fieldNames.append( f.get('field','name') )
+        # print("--", fieldNames)
         return fieldNames
 
     def getRef(self):
@@ -446,6 +446,7 @@ class netlist():
         fname -- The name of the generic netlist file to open (Optional)
 
         """
+        print('reading: ', fname)
         self.design = None
         self.components = []
         self.libparts = []
@@ -518,8 +519,7 @@ class netlist():
                             break;
 
             if not c.getLibPart():
-                _LOGGER.logger.error('Missing libpart for ref {}: {}:{}'.format(c.getRef(), c.getLibName(), c.getPartName() ))
-
+                logging.error('Missing libpart for ref {}: {}:{}'.format(c.getRef(), c.getLibName(), c.getPartName() ))
 
     def aliasMatch(self, partName, aliasList):
         for alias in aliasList:
@@ -741,7 +741,7 @@ class netlist():
         if len(group) > 0:
             return group[0].getLibPart().getDatasheet()
         else:
-            _LOGGER.logger.error("NULL!")
+            logging.error("NULL!")
         return ''
 
     def formatXML(self):
@@ -764,9 +764,8 @@ class netlist():
             self._reader.setContentHandler(_gNetReader(self))
             self._reader.parse(fname)
         except IOError as e:
-            _LOGGER.logger.error("{}: {}".format(__file__, e))
+            logging.error("{}: {}".format(__file__, e))
             sys.exit(-1)
-
 
 
 class _gNetReader(sax.handler.ContentHandler):
