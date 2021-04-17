@@ -20,9 +20,10 @@
 import logging
 import logzero
 
+
 class Log:
     def __init__(self):
-        log_format = '%(color)s[%(levelname)s]%(end_color)s %(message)s'
+        log_format = "%(color)s[%(levelname)s]%(end_color)s %(message)s"
         formatter = logzero.LogFormatter(fmt=log_format)
         logzero.setup_default_logger(formatter=formatter)
         self.logger = logzero.logger
@@ -30,4 +31,6 @@ class Log:
     def SetLevel(self, level):
         # Default log level is WARNING
         logzero.loglevel(max(logging.WARNING - level * 10, logging.NOTSET))
-        self.logger.debug("Log level to %s", max(logging.WARNING - level * 10, logging.NOTSET))
+        self.logger.debug(
+            "Log level to %s", max(logging.WARNING - level * 10, logging.NOTSET)
+        )
