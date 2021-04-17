@@ -1,2 +1,6 @@
 [flake8]
+extend-ignore = E501,E265,W605
 max-line-lenght = 100
+exclude = jlc_kicad_tools.egg-info/*
+show_source = True
+statistics = True
