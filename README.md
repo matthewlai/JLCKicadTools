@@ -12,7 +12,6 @@ Python 3.6+
 ### Installation
 ```
 pip install git+https://github.com/matthewlai/JLCKicadTools
-pip install -r requirements.txt
 ```
 
 In case you do not have pip installed. See:
