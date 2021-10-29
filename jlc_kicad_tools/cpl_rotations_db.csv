@@ -13,6 +13,7 @@
 "^SOP-4_",0
 "^SOP-(?!18_)",270
 "^TSSOP-",270
+"^SSOP-",270
 "^DFN-",270
 "^SOIC-",270
 "^SOP-18_",0
@@ -42,3 +43,4 @@
 "^HTSSOP-",270
 "^USB_C_Receptacle_XKB_U262-16XN-4BVC11",180
 "^Relay_DPDT_Omron_G6K-2F-Y",270
+"^RP2040-QFN-56",270
