@@ -42,6 +42,8 @@ from jlc_kicad_tools.logger import Log
 
 _LOGGER = Log()
 
+LCSC_PART_NUMBER_MATCHER = re.compile("^C[0-9]+$")
+
 # -----<Configure>----------------------------------------------------------------
 
 # excluded_fields is a list of regular expressions.  If any one matches a field
@@ -353,7 +355,7 @@ class comp:
         You have to define a comparison module (for instance named myEqu)
         and add the line;
             kicad_netlist_reader.comp.__eq__ = myEqu
-        in your bom generator script before calling the netliste reader by something like:
+        in your bom generator script before calling the netlist reader by something like:
             net = kicad_netlist_reader.netlist(sys.argv[1])
         """
         result = False
@@ -362,7 +364,8 @@ class comp:
                 if self.getRef().rstrip(string.digits) == other.getRef().rstrip(
                     string.digits
                 ):
-                    result = True
+                    if self.getLcscPartNumber() == other.getLcscPartNumber():
+                        result = True
         return result
 
     def setLibPart(self, part):
@@ -436,6 +439,16 @@ class comp:
 
     def getDescription(self):
         return self.element.get("libsource", "description")
+
+    def getLcscPartNumber(self):
+        lcsc_part_number = None
+        for field_name in self.getFieldNames():
+            field_value = self.getField(field_name).strip()
+
+            if LCSC_PART_NUMBER_MATCHER.match(field_value):
+                # Note: gets the *last* matching value
+                lcsc_part_number = field_value
+        return lcsc_part_number
 
 
 class netlist:

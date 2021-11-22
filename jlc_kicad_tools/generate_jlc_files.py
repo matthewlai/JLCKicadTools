@@ -77,12 +77,6 @@ def GetOpts():
         action="store_true",
     )
     parser.add_argument(
-        "--assume-same-lcsc-partnumber",
-        help="Assume same lcsc partnumber for all components of a group",
-        action="store_true",
-        dest="assume_same_lcsc_partnumber",
-    )
-    parser.add_argument(
         "--include-all-component-groups",
         help="Include component groups without LCSC part numbers in the BOM",
         action="store_true",
