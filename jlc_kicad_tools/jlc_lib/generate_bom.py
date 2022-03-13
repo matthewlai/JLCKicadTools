@@ -52,7 +52,7 @@ def GenerateBOM(input_filename, output_filename, opts):
         footprints = set()
 
         for component in group:
-            refs.append(component.getRef())
+            refs.append(component.getRef().upper())
             c = component
             # All components in a group should have the same part number
             lcsc_part_number = c.getLcscPartNumber()
