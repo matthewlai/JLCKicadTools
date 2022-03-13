@@ -52,6 +52,7 @@ def FixRotations(input_filename, output_filename, db):
         rotation_index = None
         posx_index = None
         side_index = None
+        ref_index = None
         for row in reader:
             if not package_index:
                 # This is the first row. Find "Package" and "Rot" column indices.
@@ -64,6 +65,8 @@ def FixRotations(input_filename, output_filename, db):
                         posx_index = i
                     elif row[i] == "Side":
                         side_index = i
+                    elif row[i] == "Ref":
+                        ref_index = i
                 if package_index is None:
                     _LOGGER.logger.warning(
                         "Failed to find 'Package' column in the csv file"
@@ -84,6 +87,12 @@ def FixRotations(input_filename, output_filename, db):
                         "Failed to find 'PosX' column in the csv file"
                     )
                     return False
+                if ref_index is None:
+                    _LOGGER.logger.warning(
+                        "Failed to find 'Ref' column in the csv file"
+                    )
+                    return False
+
                 # Replace column names with labels JLC wants.
                 for i in range(len(row)):
                     if row[i] in HEADER_REPLACEMENT_TABLE:
@@ -101,6 +110,7 @@ def FixRotations(input_filename, output_filename, db):
                 if flip_x:
                     row[posx_index] = "{0:.6f}".format(-float(row[posx_index]))
 
+                row[ref_index] = row[ref_index].upper()
                 no_match = True
                 for pattern, correction in db.items():
                     if pattern.match(row[package_index]):
