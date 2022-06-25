@@ -17,8 +17,8 @@
 "^DFN-",270
 "^SOIC-",270
 "^SOP-18_",0
+"^VSSOP-8_",180
 "^VSSOP-10_",270
-"^VSSOP-8_",270
 "^TSOP-6",270
 "^USON-10",270
 "^CP_EIA-",180
@@ -46,3 +46,4 @@
 "^LED_WS2812B",180
 "^Molex_PicoBlade_53261",180
 "^SW_SPST_B3",90
+"^Transformer_Ethernet_Pulse_HX0068ANL",270
