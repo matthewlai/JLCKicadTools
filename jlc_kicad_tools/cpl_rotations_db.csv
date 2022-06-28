@@ -17,11 +17,14 @@
 "^DFN-",270
 "^SOIC-",270
 "^SOP-18_",0
+"^VSSOP-8_3.0x3.0mm_P0.65mm",270
 "^VSSOP-8_",180
 "^VSSOP-10_",270
 "^TSOP-6",270
 "^USON-10",270
+"^TDSON-8-1",270
 "^CP_EIA-",180
+"^CP_Elec_8x5.4",180
 "^CP_Elec_8x10.5",180
 "^CP_Elec_6.3x7.7",180
 "^CP_Elec_8x6.7",180
@@ -47,3 +50,5 @@
 "^Molex_PicoBlade_53261",180
 "^SW_SPST_B3",90
 "^Transformer_Ethernet_Pulse_HX0068ANL",270
+"^JST_GH_SM",180
+"^JST_PH_S",180
