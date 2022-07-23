@@ -111,22 +111,24 @@ def FixRotations(input_filename, output_filename, db):
                     row[posx_index] = "{0:.6f}".format(-float(row[posx_index]))
 
                 row[ref_index] = row[ref_index].upper()
-                no_match = True
+                last_correction = None
                 for pattern, correction in db.items():
                     if pattern.match(row[package_index]):
-                        no_match = False
                         _LOGGER.logger.info(
                             "Footprint {} matched {}. Applying {} deg correction".format(
                                 row[package_index], pattern.pattern, correction
                             )
                         )
-                        if row[side_index].strip() == "bottom":
-                            rotation = (rotation - correction + 180) % 360
-                        else:
-                            rotation = (rotation + correction) % 360
-                        row[rotation_index] = "{0:.6f}".format(rotation)
-                        break
-                if no_match and row[side_index].strip() == "bottom":
+                        last_correction = correction
+
+                if last_correction is not None:
+                    if row[side_index].strip() == "bottom":
+                        rotation = (rotation - correction + 180) % 360
+                    else:
+                        rotation = (rotation + correction) % 360
+                    row[rotation_index] = "{0:.6f}".format(rotation)
+
+                if last_correction is None and row[side_index].strip() == "bottom":
                     rotation = (rotation + 180) % 360
                     row[rotation_index] = "{0:.6f}".format(rotation)
             writer.writerow(row)
