@@ -20,6 +20,7 @@
 "^VSSOP-8_3.0x3.0mm_P0.65mm",270
 "^VSSOP-8_",180
 "^VSSOP-10_",270
+"^VSON-8_",270
 "^TSOP-6",270
 "^UDFN-10",270
 "^USON-10",270
@@ -48,8 +49,8 @@
 "^RP2040-QFN-56",270
 "^TO-277",90
 "^LED_WS2812B",180
-"^Molex_PicoBlade_53261",180
 "^SW_SPST_B3",90
 "^Transformer_Ethernet_Pulse_HX0068ANL",270
 "^JST_GH_SM",180
 "^JST_PH_S",180
+"^Diodes_PowerDI3333-8",270
