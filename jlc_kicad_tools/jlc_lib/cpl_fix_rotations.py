@@ -123,9 +123,9 @@ def FixRotations(input_filename, output_filename, db):
 
                 if last_correction is not None:
                     if row[side_index].strip() == "bottom":
-                        rotation = (rotation - correction + 180) % 360
+                        rotation = (rotation - last_correction + 180) % 360
                     else:
-                        rotation = (rotation + correction) % 360
+                        rotation = (rotation + last_correction) % 360
                     row[rotation_index] = "{0:.6f}".format(rotation)
 
                 if last_correction is None and row[side_index].strip() == "bottom":
