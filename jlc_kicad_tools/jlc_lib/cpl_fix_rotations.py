@@ -123,13 +123,27 @@ def FixRotations(input_filename, output_filename, db):
 
                 if last_correction is not None:
                     if row[side_index].strip() == "bottom":
-                        rotation = (rotation - last_correction + 180) % 360
+                        # This difference in how to apply corrections is specific to KiCad,
+                        # because if you were to look at the component, then:
+                        #  * when the component is on the top layer, a counter-clockwise rotation
+                        #    of the component would result in a positive addition to the generated
+                        #    rotation value
+                        #  * when the component is on the bottom layer, then a counter-clockwise
+                        #    rotation would result in a substraction from the generated rotation
+                        #    value.
+                        # This adjustment is independent of how JLCPCB treats bottom-layer rotations.
+                        rotation = (rotation - last_correction) % 360
                     else:
                         rotation = (rotation + last_correction) % 360
-                    row[rotation_index] = "{0:.6f}".format(rotation)
 
-                if last_correction is None and row[side_index].strip() == "bottom":
+                if row[side_index].strip() == "bottom":
+                    # This adjustment is specific to how JLCPCB treats bottom-layer rotations compared to
+                    # KiCad, and has historically changed many times:
+                    #  (note: when the change was noticed does not necessarily correspond with when JLCPCB changed behaviour)
+                    # Around 2020 August: rotation = rotation # no change
+                    # Around 2022 February: rotation = (rotation + 180) % 360
                     rotation = (rotation + 180) % 360
-                    row[rotation_index] = "{0:.6f}".format(rotation)
+
+                row[rotation_index] = "{0:.6f}".format(rotation)
             writer.writerow(row)
     return True
