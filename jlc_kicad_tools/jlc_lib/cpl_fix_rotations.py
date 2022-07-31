@@ -142,7 +142,8 @@ def FixRotations(input_filename, output_filename, db):
                     #  (note: when the change was noticed does not necessarily correspond with when JLCPCB changed behaviour)
                     # Around 2020 August: rotation = rotation # no change
                     # Around 2022 February: rotation = (rotation + 180) % 360
-                    rotation = (rotation + 180) % 360
+                    # Around 2022 July: rotation = (-rotation + 180) % 360
+                    rotation = (-rotation + 180) % 360
 
                 row[rotation_index] = "{0:.6f}".format(rotation)
             writer.writerow(row)
