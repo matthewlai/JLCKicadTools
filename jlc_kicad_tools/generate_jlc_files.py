@@ -126,39 +126,58 @@ def main():
 
     netlist_filename = project_name + ".xml"
     cpl_filename = project_name + "-all-pos.csv"
-    netlist_path = None
-    cpl_path = None
+    netlist_paths = []
+    cpl_paths = []
 
     for dir_name, subdir_list, file_list in os.walk(opts.project_dir):
         for file_name in file_list:
             if file_name == netlist_filename and not netlist_path:
-                netlist_path = os.path.join(dir_name, file_name)
+                netlist_paths.append(os.path.join(dir_name, file_name))
             elif file_name == cpl_filename and not cpl_path:
-                cpl_path = os.path.join(dir_name, file_name)
-        if netlist_path and cpl_path:
-            break
+                cpl_paths.append(os.path.join(dir_name, file_name))
 
-    if netlist_path is None:
+    if len(netlist_paths) < 1:
         _LOGGER.logger.error(
             (
-                "Failed to find netlist file: {} in {} (and sub-directories). "
+                f"Failed to find netlist file: {netlist_filename} in {opts.project_dir} (and sub-directories). "
                 "Is the input directory a KiCad project? "
                 "If so, run 'Tools -> Generate Bill of Materials' in Eeschema (any format). "
                 "It will generate an intermediate file we need. "
                 "Note that this is not the same as a netlist for Pcbnew."
-            ).format(netlist_filename, opts.project_dir)
+            )
+        )
+        return errno.ENOENT
+    
+    if len(netlist_paths) > 1:
+        _LOGGER.logger.error(
+            (
+                f"Multiple netlist files found - {", ".join(netlist_paths)}. "
+                "There should be exactly one."
+            )
         )
         return errno.ENOENT
 
-    if cpl_path is None:
+    if len(cpl_paths) < 1:
         _LOGGER.logger.error(
             (
-                "Failed to find CPL file: {} in {} (and sub-directories). "
+                f"Failed to find CPL file: {cpl_filename} in {opts.project_dir} (and sub-directories). "
                 "Run 'File -> Fabrication Outputs -> Footprint Position (.pos) File' in Pcbnew. "
                 "Settings: 'CSV', 'mm', 'single file for board'."
-            ).format(cpl_filename, opts.project_dir)
+            )
         )
         return errno.ENOENT
+    
+    if len(cpl_paths) > 1:
+        _LOGGER.logger.error(
+            (
+                f"Multiple CPL files found - {", ".join(cpl_paths)}. "
+                "There should be exactly one."
+            )
+        )
+        return errno.ENOENT
+    
+    netlist_path = netlist_paths[0]
+    cpl_path = cpl_paths[0]
 
     _LOGGER.logger.info("Netlist file found at: {}".format(netlist_path))
     _LOGGER.logger.info("CPL file found at: {}".format(cpl_path))
