@@ -41,7 +41,7 @@ def GenerateBOM(input_filename, output_filename, opts):
         f, lineterminator="\n", delimiter=",", quotechar='"', quoting=csv.QUOTE_ALL
     )
 
-    out.writerow(["Comment", "Designator", "Footprint", "LCSC Part #"])
+    out.writerow(["Comment", "Designator", "Footprint", "LCSC Part Number"])
 
     grouped = net.groupComponents()
 
