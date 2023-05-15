@@ -19,7 +19,6 @@ import csv
 import re
 from jlc_kicad_tools.logger import Log
 from dataclasses import dataclass
-from typing import Optional
 
 # JLC requires columns to be named a certain way.
 HEADER_REPLACEMENT_TABLE = {
