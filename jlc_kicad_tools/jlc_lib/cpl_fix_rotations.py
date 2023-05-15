@@ -18,6 +18,8 @@
 import csv
 import re
 from jlc_kicad_tools.logger import Log
+from dataclasses import dataclass
+from typing import Optional
 
 # JLC requires columns to be named a certain way.
 HEADER_REPLACEMENT_TABLE = {
@@ -31,6 +33,13 @@ HEADER_REPLACEMENT_TABLE = {
 _LOGGER = Log()
 
 
+@dataclass
+class DatabaseEntry:
+    rotation: int
+    offset_x: float
+    offset_y: float
+
+
 def ReadDB(filename):
     db = {}
     with open(filename) as csvfile:
@@ -39,7 +48,11 @@ def ReadDB(filename):
             if row[0] == "Footprint pattern":
                 continue
             else:
-                db[re.compile(row[0])] = int(row[1])
+                db[re.compile(row[0])] = DatabaseEntry(
+                    rotation=int(row[1]),
+                    offset_x=float(row[2]) if len(row) > 2 else 0.0,
+                    offset_y=float(row[3]) if len(row) > 3 else 0.0,
+                    )
     _LOGGER.logger.info("Read {} rules from {}".format(len(db), filename))
     return db
 
@@ -51,6 +64,7 @@ def FixRotations(input_filename, output_filename, db):
         package_index = None
         rotation_index = None
         posx_index = None
+        posy_index = None
         side_index = None
         ref_index = None
         for row in reader:
@@ -63,6 +77,8 @@ def FixRotations(input_filename, output_filename, db):
                         rotation_index = i
                     elif row[i] == "PosX":
                         posx_index = i
+                    elif row[i] == "PosY":
+                        posy_index = i
                     elif row[i] == "Side":
                         side_index = i
                     elif row[i] == "Ref":
@@ -87,6 +103,11 @@ def FixRotations(input_filename, output_filename, db):
                         "Failed to find 'PosX' column in the csv file"
                     )
                     return False
+                if posy_index is None:
+                    _LOGGER.logger.warning(
+                        "Failed to find 'PosY' column in the csv file"
+                    )
+                    return False
                 if ref_index is None:
                     _LOGGER.logger.warning(
                         "Failed to find 'Ref' column in the csv file"
@@ -99,6 +120,8 @@ def FixRotations(input_filename, output_filename, db):
                         row[i] = HEADER_REPLACEMENT_TABLE[row[i]]
             else:
                 rotation = float(row[rotation_index])
+                posx = float(row[posx_index])
+                posy = float(row[posy_index])
 
                 # JLC expects positions on the bottom to have positive X.
                 # Very old KiCad versions export with positive X. Less old KiCad versions export
@@ -108,20 +131,21 @@ def FixRotations(input_filename, output_filename, db):
                     row[side_index].strip() == "bottom" and float(row[posx_index]) < 0.0
                 )
                 if flip_x:
-                    row[posx_index] = "{0:.6f}".format(-float(row[posx_index]))
+                    posx = -posx
 
                 row[ref_index] = row[ref_index].upper()
-                last_correction = None
-                for pattern, correction in db.items():
-                    if pattern.match(row[package_index]):
-                        _LOGGER.logger.info(
-                            "Footprint {} matched {}. Applying {} deg correction".format(
-                                row[package_index], pattern.pattern, correction
-                            )
-                        )
-                        last_correction = correction
+                last_entry = None
+                last_pattern = None
 
-                if last_correction is not None:
+                for pattern, entry in db.items():
+                    if pattern.match(row[package_index]):
+                        last_entry = entry
+                        last_pattern = pattern
+
+                del entry
+                del pattern
+
+                if last_entry is not None:
                     if row[side_index].strip() == "bottom":
                         # This difference in how to apply corrections is specific to KiCad,
                         # because if you were to look at the component, then:
@@ -132,9 +156,13 @@ def FixRotations(input_filename, output_filename, db):
                         #    rotation would result in a substraction from the generated rotation
                         #    value.
                         # This adjustment is independent of how JLCPCB treats bottom-layer rotations.
-                        rotation = (rotation - last_correction) % 360
+                        rotation = (rotation - last_entry.rotation) % 360
                     else:
-                        rotation = (rotation + last_correction) % 360
+                        rotation = (rotation + last_entry.rotation) % 360
+
+                    _LOGGER.logger.info(f"Footprint {row[package_index]} matched {last_pattern.pattern}. Applying {last_entry.rotation} deg rotation and {last_entry.offset_x} mm, {last_entry.offset_y} mm offset correction.")
+                    posx += last_entry.offset_x
+                    posy += last_entry.offset_y
 
                 if row[side_index].strip() == "bottom":
                     # This adjustment is specific to how JLCPCB treats bottom-layer rotations compared to
@@ -146,5 +174,8 @@ def FixRotations(input_filename, output_filename, db):
                     rotation = (-rotation + 180) % 360
 
                 row[rotation_index] = "{0:.6f}".format(rotation)
+                row[posx_index] = "{0:.6f}".format(posx)
+                row[posy_index] = "{0:.6f}".format(posy)
+
             writer.writerow(row)
     return True

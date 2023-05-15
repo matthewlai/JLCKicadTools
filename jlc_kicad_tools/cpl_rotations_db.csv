@@ -1,4 +1,4 @@
-"Footprint pattern","Correction"
+"Footprint pattern","Rotation","Offset X", "Offset Y"
 "^R_Array_Convex_",90
 "^R_Array_Concave_",90
 "^SOT-223",180
@@ -44,7 +44,7 @@
 "^BatteryHolder_Keystone_1060_1x2032",-180
 "^SO-14",-90
 "^HTSSOP-",270
-"^USB_C_Receptacle_XKB_U262-16XN-4BVC11",180
+"^USB_C_Receptacle_XKB_U262-16XN-4BVC11",0,1.44,0
 "^Relay_DPDT_Omron_G6K-2F-Y",270
 "^RP2040-QFN-56",270
 "^TO-277",90
@@ -54,3 +54,6 @@
 "^JST_PH_S",180
 "^Diodes_PowerDI3333-8",270
 "^Quectel_L80-R",270
+"^SC-74-6",180
+"^SOT-143",180
+"^PinHeader_2x05_P1\.27mm_Vertical",90,2.54,0.635
