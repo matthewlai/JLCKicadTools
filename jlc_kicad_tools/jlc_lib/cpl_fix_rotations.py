@@ -36,8 +36,8 @@ _LOGGER = Log()
 @dataclass
 class DatabaseEntry:
     rotation: int
-    offset_x: Optional[float] = None
-    offset_y: Optional[float] = None
+    offset_x: float
+    offset_y: float
 
 
 def ReadDB(filename):
@@ -50,8 +50,8 @@ def ReadDB(filename):
             else:
                 db[re.compile(row[0])] = DatabaseEntry(
                     rotation=int(row[1]),
-                    offset_x=float(row[2]) if len(row) > 2 else None,
-                    offset_y=float(row[3]) if len(row) > 3 else None,
+                    offset_x=float(row[2]) if len(row) > 2 else 0.0,
+                    offset_y=float(row[3]) if len(row) > 3 else 0.0,
                     )
     _LOGGER.logger.info("Read {} rules from {}".format(len(db), filename))
     return db
@@ -146,8 +146,6 @@ def FixRotations(input_filename, output_filename, db):
                 del pattern
 
                 if last_entry is not None:
-                    _LOGGER.logger.info(f"Footprint {row[package_index]} matched {last_pattern.pattern}. Applying {last_entry.rotation} deg rotation correction")
-
                     if row[side_index].strip() == "bottom":
                         # This difference in how to apply corrections is specific to KiCad,
                         # because if you were to look at the component, then:
@@ -162,10 +160,9 @@ def FixRotations(input_filename, output_filename, db):
                     else:
                         rotation = (rotation + last_entry.rotation) % 360
 
-                    if last_entry.offset_x is not None and last_entry.offset_y is not None:
-                        _LOGGER.logger.info(f"Footprint {row[package_index]} matched {last_pattern.pattern}. Applying {last_entry.offset_x},{last_entry.offset_y} mm offset correction")
-                        posx += last_entry.offset_x
-                        posy += last_entry.offset_y
+                    _LOGGER.logger.info(f"Footprint {row[package_index]} matched {last_pattern.pattern}. Applying {last_entry.rotation} deg rotation and {last_entry.offset_x} mm, {last_entry.offset_y} mm offset correction.")
+                    posx += last_entry.offset_x
+                    posy += last_entry.offset_y
 
                 if row[side_index].strip() == "bottom":
                     # This adjustment is specific to how JLCPCB treats bottom-layer rotations compared to
