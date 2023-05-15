@@ -1,1 +1,2 @@
 flake8==3.9.1
+importlib-metadata<5.0
