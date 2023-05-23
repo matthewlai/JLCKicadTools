@@ -2,7 +2,7 @@
 
 ## Overview
 
-JLCKicadTools is a tool aims to work with JLCPCB assembly service featuring KiCad 5.
+JLCKicadTools is a tool aims to work with JLCPCB assembly service featuring KiCad 5+ (5/6/7 tested).
 
 See [this blog post](https://dubiouscreations.com/2019/10/21/using-kicad-with-jlcpcb-assembly-service) for instructions.
 
