@@ -147,7 +147,7 @@ def main():
             )
         )
         return errno.ENOENT
-    
+
     if len(netlist_paths) > 1:
         _LOGGER.logger.error(
             (
@@ -166,7 +166,7 @@ def main():
             )
         )
         return errno.ENOENT
-    
+
     if len(cpl_paths) > 1:
         _LOGGER.logger.error(
             (
@@ -175,7 +175,7 @@ def main():
             )
         )
         return errno.ENOENT
-    
+
     netlist_path = netlist_paths[0]
     cpl_path = cpl_paths[0]
 
