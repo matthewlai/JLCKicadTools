@@ -57,7 +57,7 @@ def ReadDB(filename):
 
 
 def FixRotations(input_filename, output_filename, db):
-    with open(input_filename) as csvfile:
+    with open(input_filename, encoding='utf-8') as csvfile:
         reader = csv.reader(csvfile, delimiter=",")
         writer = csv.writer(open(output_filename, "w", newline=""), delimiter=",")
         package_index = None
