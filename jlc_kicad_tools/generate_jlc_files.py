@@ -131,9 +131,9 @@ def main():
 
     for dir_name, subdir_list, file_list in os.walk(opts.project_dir):
         for file_name in file_list:
-            if file_name == netlist_filename and not netlist_path:
+            if file_name == netlist_filename:
                 netlist_paths.append(os.path.join(dir_name, file_name))
-            elif file_name == cpl_filename and not cpl_path:
+            elif file_name == cpl_filename:
                 cpl_paths.append(os.path.join(dir_name, file_name))
 
     if len(netlist_paths) < 1:
@@ -151,7 +151,7 @@ def main():
     if len(netlist_paths) > 1:
         _LOGGER.logger.error(
             (
-                f"Multiple netlist files found - {", ".join(netlist_paths)}. "
+                f"Multiple netlist files found - {*netlist_paths,}. "
                 "There should be exactly one."
             )
         )
@@ -170,7 +170,7 @@ def main():
     if len(cpl_paths) > 1:
         _LOGGER.logger.error(
             (
-                f"Multiple CPL files found - {", ".join(cpl_paths)}. "
+                f"Multiple CPL files found - {*cpl_paths,}. "
                 "There should be exactly one."
             )
         )
