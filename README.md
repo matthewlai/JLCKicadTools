@@ -39,4 +39,4 @@ $ jlc-kicad-tools
 
     * ~~Make sure there are no non-ASCII characters in any of the fields. See:~~ https://github.com/matthewlai/JLCKicadTools/issues/45
 
-    * Please update to lastest version.
+    * Please update to latest version.
